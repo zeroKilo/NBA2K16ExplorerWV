@@ -29,12 +29,12 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.openNBA2K16exeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.openNBA2K16exeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -65,6 +65,13 @@
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // openNBA2K16exeToolStripMenuItem
+            // 
+            this.openNBA2K16exeToolStripMenuItem.Name = "openNBA2K16exeToolStripMenuItem";
+            this.openNBA2K16exeToolStripMenuItem.Size = new System.Drawing.Size(129, 20);
+            this.openNBA2K16exeToolStripMenuItem.Text = "Open NBA2K16.exe ...";
+            this.openNBA2K16exeToolStripMenuItem.Click += new System.EventHandler(this.openNBA2K16exeToolStripMenuItem_Click);
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -88,24 +95,6 @@
             this.tabPage1.Text = "Table Of Content";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.splitContainer1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(631, 489);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Container";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // openNBA2K16exeToolStripMenuItem
-            // 
-            this.openNBA2K16exeToolStripMenuItem.Name = "openNBA2K16exeToolStripMenuItem";
-            this.openNBA2K16exeToolStripMenuItem.Size = new System.Drawing.Size(129, 20);
-            this.openNBA2K16exeToolStripMenuItem.Text = "Open NBA2K16.exe ...";
-            this.openNBA2K16exeToolStripMenuItem.Click += new System.EventHandler(this.openNBA2K16exeToolStripMenuItem_Click);
-            // 
             // listBox1
             // 
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -126,6 +115,17 @@
             this.vScrollBar1.Size = new System.Drawing.Size(16, 483);
             this.vScrollBar1.TabIndex = 1;
             this.vScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.splitContainer1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(631, 489);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Container";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // splitContainer1
             // 
@@ -225,7 +225,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "NBA2K16 Explorer by Warranty Voider";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
