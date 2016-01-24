@@ -31,6 +31,8 @@ namespace NBA2K16ExplorerWV
         public List<TOCEntry> TOCList;
         public string CurrentContainer;
         public string CurrentFileName;
+        public long CurrentOffset;
+        List<string> Container;
 
         private void openNBA2K16exeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -82,7 +84,7 @@ namespace NBA2K16ExplorerWV
 
         void LoadContainer()
         {
-            List<string> Container = new List<string>();
+            Container = new List<string>();
             bool found;
             foreach (TOCEntry e in TOCList)
             {
@@ -114,6 +116,17 @@ namespace NBA2K16ExplorerWV
             if (n == -1)
                 return;
             CurrentContainer = listBox2.Items[n].ToString();
+            CurrentOffset = 0;
+            foreach (string c in Container)
+                if (c == CurrentContainer)
+                    break;
+                else
+                {
+                    FileStream fs = new FileStream(basepath + c, FileMode.Open, FileAccess.Read);
+                    fs.Seek(0, SeekOrigin.End);
+                    CurrentOffset += fs.Position;
+                    fs.Close();
+                }
             foreach (TOCEntry te in TOCList)
                 if (te.Container == CurrentContainer)
                     listBox3.Items.Add("@" + te.Offset.ToString("X8") + " : " + te.Name);
@@ -131,7 +144,7 @@ namespace NBA2K16ExplorerWV
                     CurrentFileName = te.Name + ".zip";
                     MemoryStream m = new MemoryStream();
                     FileStream fs = new FileStream(basepath + CurrentContainer, FileMode.Open, FileAccess.Read);
-                    fs.Seek(te.Offset, 0);                    
+                    fs.Seek(te.Offset - CurrentOffset, 0);                    
                     hb1.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(ReadLZMA(fs, te.Size));
                     break;
                 }
