@@ -129,7 +129,7 @@ namespace NBA2K16ExplorerWV
                 }
             foreach (TOCEntry te in TOCList)
                 if (te.Container == CurrentContainer)
-                    listBox3.Items.Add("@" + te.Offset.ToString("X8") + " : " + te.Name);
+                    listBox3.Items.Add("@" + (te.Offset - CurrentOffset).ToString("X8") + " : " + te.Name);
         }
 
         private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
