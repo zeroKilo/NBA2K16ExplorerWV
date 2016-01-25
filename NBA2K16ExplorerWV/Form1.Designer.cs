@@ -41,6 +41,7 @@
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.hb1 = new Be.Windows.Forms.HexBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.rtb1 = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -172,6 +173,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.hb1);
             this.splitContainer2.Panel2.Controls.Add(this.button1);
+            this.splitContainer2.Panel2.Controls.Add(this.rtb1);
             this.splitContainer2.Size = new System.Drawing.Size(413, 483);
             this.splitContainer2.SplitterDistance = 137;
             this.splitContainer2.TabIndex = 0;
@@ -212,9 +214,21 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(413, 23);
             this.button1.TabIndex = 1;
-            this.button1.Text = "Extract zip Archive...";
+            this.button1.Text = "Extract File...";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // rtb1
+            // 
+            this.rtb1.DetectUrls = false;
+            this.rtb1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtb1.Font = new System.Drawing.Font("Courier New", 10F);
+            this.rtb1.Location = new System.Drawing.Point(0, 0);
+            this.rtb1.Name = "rtb1";
+            this.rtb1.Size = new System.Drawing.Size(413, 342);
+            this.rtb1.TabIndex = 2;
+            this.rtb1.Text = "";
+            this.rtb1.WordWrap = false;
             // 
             // Form1
             // 
@@ -259,6 +273,7 @@
         private System.Windows.Forms.ListBox listBox3;
         private Be.Windows.Forms.HexBox hb1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.RichTextBox rtb1;
     }
 }
 

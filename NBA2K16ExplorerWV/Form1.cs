@@ -141,16 +141,25 @@ namespace NBA2K16ExplorerWV
             foreach (TOCEntry te in TOCList)
                 if (te.Container == CurrentContainer && (count++) == n)
                 {
-                    CurrentFileName = te.Name + ".zip";
-                    MemoryStream m = new MemoryStream();
+                    CurrentFileName = te.Name;
                     FileStream fs = new FileStream(basepath + CurrentContainer, FileMode.Open, FileAccess.Read);
-                    fs.Seek(te.Offset - CurrentOffset, 0);                    
-                    hb1.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(ReadLZMA(fs, te.Size));
+                    fs.Seek(te.Offset - CurrentOffset, 0);
+                    byte[] data = ReadFile(fs, te.Size);
+                    hb1.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(data);
+                    if (!isText(te.Name))
+                    {
+                        hb1.BringToFront();
+                    }
+                    else
+                    {
+                        rtb1.Text = System.Text.Encoding.Default.GetString(data);
+                        rtb1.BringToFront();
+                    }
                     break;
                 }
         }
 
-        byte[] ReadLZMA(Stream input, long size)
+        byte[] ReadFile(Stream input, long size)
         {
             MemoryStream output = new MemoryStream();
             int b, count = 0;
@@ -162,16 +171,40 @@ namespace NBA2K16ExplorerWV
         private void button1_Click(object sender, EventArgs e)
         {
             SaveFileDialog d = new SaveFileDialog();
-            d.Filter = CurrentFileName + "|" + CurrentFileName;
-            d.FileName = CurrentFileName;
+            string extension = "";
+            if (isArchive())
+                extension = ".zip";
+            string fname = CurrentFileName.Replace("\\", "_").Replace("/", "_");
+            d.Filter = fname + extension + "|" + fname + extension;
+            d.FileName = fname + extension;
             if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                MemoryStream m = new MemoryStream();
+                MemoryStream m = new MemoryStream();                
                 for (long i = 0; i < hb1.ByteProvider.Length; i++)
                     m.WriteByte(hb1.ByteProvider.ReadByte(i));
                 File.WriteAllBytes(d.FileName, m.ToArray());
                 MessageBox.Show("Done.");
             }
+        }
+
+        bool isArchive()
+        {
+            char P = ' ';
+            char K = ' ';
+            if (hb1.ByteProvider.Length > 1)
+            {
+                P = (char)hb1.ByteProvider.ReadByte(0);
+                K = (char)hb1.ByteProvider.ReadByte(0);
+            }
+            return (P == 'P' && K == 'K');
+        }
+
+        bool isText(string name)
+        {
+            name = name.ToLower();
+            if (name.EndsWith(".json"))
+                return true;
+            return false;
         }
     }
 }
