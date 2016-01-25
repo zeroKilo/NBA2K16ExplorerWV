@@ -10,7 +10,6 @@ D:\CODE\c#\NBA2K16ExplorerWV\NBA2K16ExplorerWV\obj\Debug\NBA2K16ExplorerWV.pdb
 D:\CODE\c#\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\Be.Windows.Forms.HexBox.dll
 D:\CODE\c#\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\Be.Windows.Forms.HexBox.pdb
 D:\CODE\c#\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\Be.Windows.Forms.HexBox.xml
-D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\NBA2K16ExplorerWV.exe.config
 D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\obj\Debug\NBA2K16ExplorerWV.exe
 D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\obj\Debug\NBA2K16ExplorerWV.pdb
 D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\NBA2K16ExplorerWV.exe
@@ -22,3 +21,6 @@ D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\obj\Debug\NBA2K16ExplorerWV.c
 D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\obj\Debug\NBA2K16ExplorerWV.Form1.resources
 D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\obj\Debug\NBA2K16ExplorerWV.Properties.Resources.resources
 D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\obj\Debug\NBA2K16ExplorerWV.csproj.GenerateResource.Cache
+D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\SevenZipSharp.dll
+D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\NBA2K16ExplorerWV.exe.config
+D:\CODE\GitHub\NBA2K16ExplorerWV\NBA2K16ExplorerWV\bin\Debug\DevIL.NET2.dll

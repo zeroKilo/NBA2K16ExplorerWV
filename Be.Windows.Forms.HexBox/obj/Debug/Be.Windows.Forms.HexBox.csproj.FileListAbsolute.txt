@@ -113,3 +113,11 @@ D:\CODE\c#\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.
 D:\CODE\c#\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.HexBox.csproj.GenerateResource.Cache
 D:\CODE\c#\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.HexBox.dll
 D:\CODE\c#\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.HexBox.pdb
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\bin\Debug\Be.Windows.Forms.HexBox.dll
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\bin\Debug\Be.Windows.Forms.HexBox.pdb
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\bin\Debug\Be.Windows.Forms.HexBox.xml
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.HexBox.resources
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.Properties.Resources.resources
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.HexBox.csproj.GenerateResource.Cache
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.HexBox.dll
+D:\CODE\GitHub\NBA2K16ExplorerWV\Be.Windows.Forms.HexBox\obj\Debug\Be.Windows.Forms.HexBox.pdb

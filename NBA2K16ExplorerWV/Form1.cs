@@ -9,30 +9,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DevIL;
 
 namespace NBA2K16ExplorerWV
 {
     public partial class Form1 : Form
     {
+        public string currentPath;
+        public string myPath = Path.GetDirectoryName(Application.ExecutablePath) + "\\";
+        public Archive ar;
+
         public Form1()
         {
             InitializeComponent();
         }
-
-        public struct TOCEntry
-        {
-            public string Container;
-            public string Name;
-            public long Offset;
-            public long Size;
-        }
-
-        public string basepath;
-        public List<TOCEntry> TOCList;
-        public string CurrentContainer;
-        public string CurrentFileName;
-        public long CurrentOffset;
-        List<string> Container;
 
         private void openNBA2K16exeToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -40,146 +30,93 @@ namespace NBA2K16ExplorerWV
             d.Filter = "NBA2K16.exe|NBA2K16.exe";
             if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                basepath = Path.GetDirectoryName(d.FileName) + "\\";
-                LoadData();
+                Log.Clear();
+                FileSystem.Load(Path.GetDirectoryName(d.FileName) + "\\");
+                setCurrentPath("");                
+                Log.PrintLn("Done.");
             }
         }
 
-        void LoadData()
+        private void setCurrentPath(string p)
         {
-            LoadTOC();
-            LoadContainer();
-        }
-
-        void LoadTOC()
-        {            
+            currentPath = p;
+            label1.Text = "Path: /" + p;
             listBox1.Items.Clear();
-            string[] lines = File.ReadAllLines(basepath + "manifest");
-            TOCList = new List<TOCEntry>();
-            foreach (string line in lines)
-            {
-                TOCEntry e = new TOCEntry();
-                string[] p1 = line.Split('\t');
-                e.Container = p1[0];
-                string[] p2 = p1[1].Trim().Split(' ');
-                e.Name = p2[0];
-                e.Offset = Convert.ToInt64(p2[1]);
-                e.Size = Convert.ToInt64(p2[2]);
-                TOCList.Add(e);
-            }
-            vScrollBar1.Maximum = lines.Length - 100;
-            RefreshTOC();
-        }
-
-        void RefreshTOC()
-        {
-            listBox1.Items.Clear();
-            int pos = vScrollBar1.Value;
-            for (int i = pos; i < pos + 100 && i < TOCList.Count; i++)
-            {
-                TOCEntry e = TOCList[i];
-                listBox1.Items.Add(i + " : Container='" + e.Container + "' Name='" + e.Name + "' Size=" + e.Size + " bytes Offset=0x" + e.Offset.ToString("X"));
-            }
-        }
-
-        void LoadContainer()
-        {
-            Container = new List<string>();
-            bool found;
-            foreach (TOCEntry e in TOCList)
-            {
-                found = false;
-                foreach(string c in Container)
-                    if (c == e.Container)
-                    {
-                        found = true;
-                        break;
-                    }
-                if (!found)
-                    Container.Add(e.Container);
-            }
-            Container.Sort();
+            listBox1.Items.AddRange(FileSystem.getFoldersFromPath(currentPath));
             listBox2.Items.Clear();
-            foreach (string c in Container)
-                listBox2.Items.Add(c);
+            listBox2.Items.AddRange(FileSystem.getFilesFromPath(currentPath));
         }
 
-        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            RefreshTOC();
+            Log.setBox(rtb1);
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            int n = listBox1.SelectedIndex;
+            if (n == -1)
+                return;
+            listBox2.Items.Clear();
+            string name = listBox1.Items[n].ToString();
+            if (name == "..")
+            {
+                string[] parts = currentPath.Split('/');
+                if (parts.Length == 2)
+                    setCurrentPath("");
+                else
+                {
+                    StringBuilder path = new StringBuilder();
+                    for (int i = 0; i < parts.Length - 2; i++)
+                        path.Append(parts[i] + "/");
+                    setCurrentPath(path.ToString());
+                }
+            }
+            else
+                setCurrentPath(currentPath + name + "/");  
+            if (currentPath.Length != 0)
+                listBox1.Items.Insert(0, "..");
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listBox3.Items.Clear();
             int n = listBox2.SelectedIndex;
             if (n == -1)
                 return;
-            CurrentContainer = listBox2.Items[n].ToString();
-            CurrentOffset = 0;
-            foreach (string c in Container)
-                if (c == CurrentContainer)
-                    break;
-                else
-                {
-                    FileStream fs = new FileStream(basepath + c, FileMode.Open, FileAccess.Read);
-                    fs.Seek(0, SeekOrigin.End);
-                    CurrentOffset += fs.Position;
-                    fs.Close();
-                }
-            foreach (TOCEntry te in TOCList)
-                if (te.Container == CurrentContainer)
-                    listBox3.Items.Add("@" + (te.Offset - CurrentOffset).ToString("X8") + " : " + te.Name);
+            string path = currentPath + listBox2.Items[n].ToString();
+            FileSystem.TOCEntry toc = FileSystem.findTOCbyPath(path);
+            hb1.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(FileSystem.getDataByTOC(toc));
+            rtb2.Text = "";
+            rtb2.AppendText("Path = " + path + "\n");
+            rtb2.AppendText("Size = 0x" + toc.Size.ToString("X") + " bytes\n");
+            rtb2.AppendText("Offset = 0x" + toc.RealOffset.ToString("X") + "\n");
+            rtb2.AppendText("Container = " + toc.Container + "\n");
+            CheckArchive(toc);
         }
 
-        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
+        private void CheckArchive(FileSystem.TOCEntry toc)
         {
-            int n = listBox3.SelectedIndex;
+            listBox3.Items.Clear();
+            if (hb1.ByteProvider.Length > 2 && (char)hb1.ByteProvider.ReadByte(0) == 'P' && (char)hb1.ByteProvider.ReadByte(1) == 'K')
+            {
+                File.WriteAllBytes(myPath + "temp.zip", FileSystem.getDataByTOC(toc));
+                ar = new Archive(myPath + "temp.zip");
+                listBox3.Items.AddRange(ar.getFiles());
+            }
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int n = listBox2.SelectedIndex;
             if (n == -1)
                 return;
-            int count = 0;
-            foreach (TOCEntry te in TOCList)
-                if (te.Container == CurrentContainer && (count++) == n)
-                {
-                    CurrentFileName = te.Name;
-                    FileStream fs = new FileStream(basepath + CurrentContainer, FileMode.Open, FileAccess.Read);
-                    fs.Seek(te.Offset - CurrentOffset, 0);
-                    byte[] data = ReadFile(fs, te.Size);
-                    hb1.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(data);
-                    if (!isText(te.Name))
-                    {
-                        hb1.BringToFront();
-                    }
-                    else
-                    {
-                        rtb1.Text = System.Text.Encoding.Default.GetString(data);
-                        rtb1.BringToFront();
-                    }
-                    break;
-                }
-        }
-
-        byte[] ReadFile(Stream input, long size)
-        {
-            MemoryStream output = new MemoryStream();
-            int b, count = 0;
-            while ((b = input.ReadByte()) != -1 && (count++) < size)
-                output.WriteByte((byte)b);
-            return output.ToArray();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
+            string name = listBox2.Items[n].ToString();
             SaveFileDialog d = new SaveFileDialog();
-            string extension = "";
-            if (isArchive())
-                extension = ".zip";
-            string fname = CurrentFileName.Replace("\\", "_").Replace("/", "_");
-            d.Filter = fname + extension + "|" + fname + extension;
-            d.FileName = fname + extension;
-            if (d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            d.Filter = name + "|" + name;
+            d.FileName = name;
+            if(d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                MemoryStream m = new MemoryStream();                
+                MemoryStream m = new MemoryStream();
                 for (long i = 0; i < hb1.ByteProvider.Length; i++)
                     m.WriteByte(hb1.ByteProvider.ReadByte(i));
                 File.WriteAllBytes(d.FileName, m.ToArray());
@@ -187,24 +124,36 @@ namespace NBA2K16ExplorerWV
             }
         }
 
-        bool isArchive()
+        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-            char P = ' ';
-            char K = ' ';
-            if (hb1.ByteProvider.Length > 1)
+            int n = listBox3.SelectedIndex;
+            if (n == -1)
+                return;
+            string name = listBox3.Items[n].ToString();
+            byte[] data = ar.getFileData(name);
+            hb2.ByteProvider = new Be.Windows.Forms.DynamicByteProvider(data);
+            pb1.CreateGraphics().Clear(Color.White);
+            if (name.ToLower().EndsWith(".dds"))
             {
-                P = (char)hb1.ByteProvider.ReadByte(0);
-                K = (char)hb1.ByteProvider.ReadByte(0);
+                File.WriteAllBytes(myPath + "temp.dds", data);
+                pb1.Image = DevIL.DevIL.LoadBitmap(myPath + "temp.dds");
             }
-            return (P == 'P' && K == 'K');
         }
 
-        bool isText(string name)
+        private void extractFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            name = name.ToLower();
-            if (name.EndsWith(".json"))
-                return true;
-            return false;
+            int n = listBox3.SelectedIndex;
+            if (n == -1)
+                return;
+            string name = listBox3.Items[n].ToString();
+            byte[] data = ar.getFileData(name);
+            SaveFileDialog d = new SaveFileDialog();
+            d.Filter = name + "|" + name;
+            if(d.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                File.WriteAllBytes(d.FileName, data);
+                MessageBox.Show("Done.");
+            }
         }
     }
 }
